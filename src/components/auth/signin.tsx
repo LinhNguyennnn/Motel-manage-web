@@ -38,7 +38,7 @@ const Signin = (props: Props) => {
   };
 
   return (
-    <div className="min-h-[700px] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[700px] flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="rounded bg-white max-w-md overflow-hidden shadow-xl p-5 space-y-8">
           <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 uppercase">đăng nhập</h2>
@@ -53,7 +53,8 @@ const Signin = (props: Props) => {
                 placeholder="Nhập địa chỉ email"
                 {...register('email', {
                   required: true,
-                  pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                  pattern:
+                    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 })}
               />
               {errors.email?.type === 'required' && (
@@ -89,7 +90,7 @@ const Signin = (props: Props) => {
             </div>
           </form>
           <div className="mt-6 text-grey-dark">
-            Bạn chưa có tài khoản?{' '}
+            Bạn chưa có tài khoản?
             <Link href={'/auth/signup'}>
               <a className="text-blue-600 hover:underline">Đăng ký tài khoản</a>
             </Link>

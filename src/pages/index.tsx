@@ -8,30 +8,31 @@ import { getValueCountStatis } from './api/statistical';
 type Props = {};
 
 type IDataCount = {
-  countRoom: Number,
-  countHouse: Number,
-  countUser: Number,
-}
+  countRoom: Number;
+  countHouse: Number;
+  countUser: Number;
+};
 
 const Introduce = (props: Props) => {
-
   const [count, setCount] = useState<IDataCount>();
 
   useEffect(() => {
     const getValueCount = async () => {
-      await getValueCountStatis().then((result) => {
-        setCount(result.data.data)
-      }).catch(() => {
-        setCount({
-          countRoom: 0,
-          countHouse: 0,
-          countUser: 0,
+      await getValueCountStatis()
+        .then((result) => {
+          setCount(result.data.data);
         })
-      });
+        .catch(() => {
+          setCount({
+            countRoom: 0,
+            countHouse: 0,
+            countUser: 0,
+          });
+        });
     };
 
-    getValueCount()
-  }, [])
+    getValueCount();
+  }, []);
 
   return (
     <div className="bg-slate-200 clear-both min-h-screen">
@@ -73,7 +74,8 @@ const Introduce = (props: Props) => {
             <p className="pt-3">- Tính tiền thuê phòng, tiền dịch vụ, theo từng khu vực, phòng, theo kỳ</p>
             <p className="pt-3">- Quản lý các khoản phí liên quan đến nhà trọ</p>
             <p className="pt-3">
-              - Báo cáo doanh thu tổng; Danh sách khách thuê; Báo cáo lời lỗ; Hợp đồng sắp hết hạn; Danh sách khách thuê đặt cọc
+              - Báo cáo doanh thu tổng; Danh sách khách thuê; Báo cáo lời lỗ; Hợp đồng sắp hết hạn; Danh sách khách thuê
+              đặt cọc
             </p>
           </div>
         </div>
@@ -106,24 +108,34 @@ const Introduce = (props: Props) => {
                 <div className="flex pt-5">
                   <FontAwesomeIcon className="w-5" icon={faPhone}></FontAwesomeIcon>
 
-                  <a href={`tel:0824144695`} className="pl-3">0824144695</a>
+                  <a href={`tel:0868622599`} className="pl-3">
+                    0868622599
+                  </a>
                 </div>
                 <div className="flex pt-5">
                   <FontAwesomeIcon className="w-5" icon={faMessage}></FontAwesomeIcon>
-                  <a href={`tel:0824144695`} className="pl-3">0824144695</a>
+                  <a href={`tel:0868622599`} className="pl-3">
+                    0868622599
+                  </a>
                 </div>
                 <div className="flex pt-5">
                   <FontAwesomeIcon className="w-5" icon={faLocationDot}></FontAwesomeIcon>
-                  <span className="pl-3">Số 1, ngách 23, ngõ 39 Phố Lụa, TDP Bạch Đằng, Vạn Phúc, Hà Đông, Hà Nội</span>
+                  <span className="pl-3">Số 18 Tam Trinh, Hai Bà Trưng, Hà Nội</span>
                 </div>
                 <div className="flex pt-5">
                   <FontAwesomeIcon className="w-5" icon={faEnvelope}></FontAwesomeIcon>
-                  <a href="mailto:motel-manager-247@gmail.com" className="pl-3">motel-manager-247@gmail.com</a>
+                  <a href="mailto:linhna.2049@gmail.com" className="pl-3">
+                    linhna.2049@gmail.com
+                  </a>
                 </div>
                 <div className="flex pt-5">
                   <FontAwesomeIcon className="w-5" icon={faLink}></FontAwesomeIcon>
                   <Link href="/">
-                    <a href='https://motel-manager-247.vercel.app/' className="pl-3 text-green-500">https://motel-manager-247.vercel.app/</a>
+                    {/* TODO: Change URL  */}
+                    <a href="url" className="pl-3 text-green-500">
+                      {/* https://motel-manager-247.vercel.app/ */}
+                      URL
+                    </a>
                   </Link>
                 </div>
               </div>

@@ -39,7 +39,7 @@ export const UserProvider = ({ children }: any) => {
   const [token, setToken] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['user', 'code_room']);
   const pathnameUrl = router.pathname.split('/');
-  const [actives, setActives] = useState(pathnameUrl[4] || '')
+  const [actives, setActives] = useState(pathnameUrl[4] || '');
 
   const logoutResetData = () => {
     setLoading(true);
@@ -72,11 +72,7 @@ export const UserProvider = ({ children }: any) => {
     setActives,
   };
 
-  return (
-    <div>
-      <UserContext.Provider value={value}>{children}</UserContext.Provider>
-    </div>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
 export default UserProvider;

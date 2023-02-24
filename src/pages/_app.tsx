@@ -19,17 +19,17 @@ config.autoAddCss = false;
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [showChild, setShowChild] = useState(false)
+  const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
-    setShowChild(true)
-  }, [])
+    setShowChild(true);
+  }, []);
 
   if (!showChild) {
-    return null
+    return null;
   }
 
-  console.error = () => { };
+  console.error = () => {};
   const switchLayout = () => {
     if (router.pathname.search('/manager/landlord/list-home') >= 0) {
       return (
@@ -65,8 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </CheckCodeRoom>
         </div>
       );
-    }
-    else {
+    } else {
       return (
         <div className="bg-gray-200">
           <LayoutIntro>
@@ -80,7 +79,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <div>
+    <>
       <NextNProgress />
       <CookiesProvider>
         <UserProvider>
@@ -88,7 +87,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ToastContainer />
         </UserProvider>
       </CookiesProvider>
-    </div>
+    </>
   );
 }
 

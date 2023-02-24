@@ -12,13 +12,10 @@ const LayoutIntro = ({ children }: Props) => {
   const { loading } = useUserContext();
 
   return (
-    <div className="m-auto bg-white w-full min-h-screen">
-      {<CircleSpinnerOverlay loading={loading} color="#2563eb" size={100} message="Loadinggg" zIndex={9999} />}
-
-      <div>
-        <HeaderPreview />
-      </div>
-      <div>{children}</div>
+    <div className="flex flex-col m-auto bg-white w-full min-h-screen justify-between">
+      <CircleSpinnerOverlay loading={loading} color="#2563eb" size={100} message="Loadinggg" zIndex={9999} />
+      <HeaderPreview />
+      {children}
       <FooterPreview />
     </div>
   );
