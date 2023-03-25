@@ -1,9 +1,8 @@
-import Signin from '@/components/auth/signin';
 import React from 'react';
 
-type Props = {};
+import Signin from '@/components/auth/signin';
 
-const signin = (props: Props) => {
+const signin: React.FC = () => {
   return <Signin />;
 };
 

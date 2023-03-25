@@ -1,12 +1,15 @@
-import React from 'react'
+import React from 'react';
+
 type Props = {
-  data: any
-}
-const BillLiqui = ({ data }: Props) => {
+  data: any;
+};
+
+const BillLiqui: React.FC<Props> = ({data}) => {
   const sumWithInitial =
     data &&
     data?.payment?.invoiceService?.reduce(
-      (previousValue: number, currentValue: any) => previousValue + currentValue.amount,
+      (previousValue: number, currentValue: any) =>
+        previousValue + currentValue.amount,
       0,
     );
   return (
@@ -20,51 +23,59 @@ const BillLiqui = ({ data }: Props) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       STT
                     </th>
                     <th
                       scope="col"
-                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Loại hóa đơn
                     </th>
                     <th
                       scope="col"
-                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Số tiền thanh toán
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {data &&
-                    data?.payment?.invoiceService?.map((item: any, index: any) => {
-                      return (
-                        <tr key={index}>
-                          <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                            <div className="text-center">{index + 1}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace">
-                            <div className="text-center">{item?.serviceName}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace">
-                            <div className="text-center">{item?.amount?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
-                          </td>
-                        </tr>
-                      )
-                    })}
+                    data?.payment?.invoiceService?.map(
+                      (item: any, index: any) => {
+                        return (
+                          <tr key={index}>
+                            <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                              <div className="text-center">{index + 1}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">
+                                {item?.serviceName}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">
+                                {item?.amount?.toLocaleString('it-IT', {
+                                  style: 'currency',
+                                  currency: 'VND',
+                                })}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      },
+                    )}
                   <tr>
-
                     <td className="px-6 py-4 whitespace">
                       <div className="text-center">Tổng tiền</div>
                     </td>
+                    <td className="px-6 py-4 whitespace"></td>
                     <td className="px-6 py-4 whitespace">
-
-                    </td>
-                    <td className="px-6 py-4 whitespace">
-                      <div className="text-center">{sumWithInitial?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
+                      <div className="text-center">
+                        {sumWithInitial?.toLocaleString('it-IT', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -74,7 +85,7 @@ const BillLiqui = ({ data }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BillLiqui
+export default BillLiqui;

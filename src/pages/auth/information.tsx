@@ -1,14 +1,9 @@
-import AccountInformation from '@/components/auth/information'
-import React from 'react'
+import React from 'react';
 
-type Props = {}
+import AccountInformation from '@/components/auth/information';
 
-const accountInformation = (props: Props) => {
-  return (
-    <div>
-      <AccountInformation />
-    </div>
-  )
-}
+const accountInformation: React.FC = () => {
+  return <AccountInformation />;
+};
 
-export default accountInformation
+export default accountInformation;

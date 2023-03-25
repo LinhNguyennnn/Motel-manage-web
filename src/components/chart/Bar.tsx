@@ -1,10 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { useRouter } from 'next/router';
-import { Bar } from 'react-chartjs-2';
-import { getAllBillServiceByYear } from 'src/pages/api/statistical';
+import React from 'react';
+import {Bar} from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export const options = {
   responsive: true,
@@ -35,13 +48,18 @@ const labels = [
   'Tháng 11',
   'Tháng 12',
 ];
-const BarChart = (dataNumber: any) => {  
-  const data = {
+
+type Props = {
+  data: any;
+};
+
+const BarChart: React.FC<Props> = ({data}) => {
+  const chartData = {
     labels,
     datasets: [
       {
         label: 'Tổng số tiền',
-        data: dataNumber.data,
+        data: data,
         backgroundColor: 'springgreen',
         borderWidth: 1,
       },
@@ -50,7 +68,7 @@ const BarChart = (dataNumber: any) => {
 
   return (
     <div className="block h-[300px] lg:h-[400px]">
-      <Bar options={options} data={data} />
+      <Bar options={options} data={chartData} />
     </div>
   );
 };

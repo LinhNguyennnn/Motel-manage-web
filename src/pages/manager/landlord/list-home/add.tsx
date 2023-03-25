@@ -1,11 +1,11 @@
-import { useUserContext } from '@/context/UserContext';
+import React from 'react';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import {useRouter} from 'next/router';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Toast } from 'src/hooks/toast';
-import { addHouse } from 'src/pages/api/house';
-type Props = {};
+
+import {useUserContext} from '@/context/UserContext';
+import {addHouse} from 'src/pages/api/house';
+import {Toast} from 'src/hooks/toast';
 
 type FormInput = {
   _id: string;
@@ -13,17 +13,17 @@ type FormInput = {
   address: string;
 };
 
-const AddHome = (props: Props) => {
+const AddHome: React.FC = () => {
   const router = useRouter();
-  const { cookies, setLoading } = useUserContext();
+  const {cookies, setLoading} = useUserContext();
   const userData = cookies?.user;
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm<FormInput>();
   const onSubmit: SubmitHandler<FormInput> = async (dataForm: any) => {
-    const newData = { ...dataForm, userData: userData };
+    const newData = {...dataForm, userData: userData};
     setLoading(true);
     await addHouse(newData)
       .then(() => {
@@ -31,7 +31,7 @@ const AddHome = (props: Props) => {
         Toast('success', 'Thêm nhà  thành công!');
         router.push('/manager/landlord/list-home');
       })
-      .catch((error) => {
+      .catch(error => {
         Toast('error', error?.response?.data?.message);
         setLoading(false);
       });
@@ -44,9 +44,13 @@ const AddHome = (props: Props) => {
           <h2 className="pt-2 text-xl">Thêm nhà</h2>
         </div>
       </div>
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="username">
             Tên nhà <span className="text-[red]">*</span>
           </label>
           <input
@@ -54,17 +58,23 @@ const AddHome = (props: Props) => {
             id="name"
             type="text"
             placeholder="Xin mời nhập tên nhà"
-            {...register('name', { required: true, minLength: 6 })}
+            {...register('name', {required: true, minLength: 6})}
           />
           {errors.name?.type === 'required' && (
-            <span className="text-[red] mt-1 block">Vui lòng nhập tên nhà!</span>
+            <span className="text-[red] mt-1 block">
+              Vui lòng nhập tên nhà!
+            </span>
           )}
           {errors.name?.type === 'minLength' && (
-            <span className="text-[red] mt-1 block">Tên nhà tối thiểu 6 ký tự!</span>
+            <span className="text-[red] mt-1 block">
+              Tên nhà tối thiểu 6 ký tự!
+            </span>
           )}
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="username">
             Địa chỉ <span className="text-[red]">*</span>
           </label>
           <input
@@ -72,21 +82,24 @@ const AddHome = (props: Props) => {
             id="address"
             type="text"
             placeholder="Xin mời nhập địa chỉ"
-            {...register('address', { required: true, minLength: 6 })}
+            {...register('address', {required: true, minLength: 6})}
           />
           {errors.address?.type === 'required' && (
-            <span className="text-[red] mt-1 block">Vui lòng nhập địa chỉ nhà!</span>
+            <span className="text-[red] mt-1 block">
+              Vui lòng nhập địa chỉ nhà!
+            </span>
           )}
           {errors.address?.type === 'minLength' && (
-            <span className="text-[red] mt-1 block">Địa chỉ nhà tối thiểu 6 ký tự!</span>
+            <span className="text-[red] mt-1 block">
+              Địa chỉ nhà tối thiểu 6 ký tự!
+            </span>
           )}
         </div>
 
         <div className="flex items-center gap-6">
           <Link
-            href={`/manager/landlord/list-home`}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+            href="/manager/landlord/list-home"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Quay lại
             </a>
@@ -94,8 +107,7 @@ const AddHome = (props: Props) => {
 
           <button
             type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Thêm nhà
           </button>
         </div>

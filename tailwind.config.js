@@ -7,9 +7,9 @@ module.exports = {
   ],
   theme: {
     screens: {
-      '2xs': { min: '375px', max: '440px' },
-      'xs': { min: '440px', max: '540px' },
-      's': { min: '540px', max: '640px' },
+      '2xs': {min: '375px', max: '440px'},
+      xs: {min: '440px', max: '540px'},
+      s: {min: '540px', max: '640px'},
       ...defaultTheme.screens,
     },
     extends: {},

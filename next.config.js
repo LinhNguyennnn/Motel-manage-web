@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  typescript: {
+    tsconfigPath: './tsconfig.json',
+  },
 };
 
 module.exports = {
@@ -12,7 +15,7 @@ module.exports = {
   images: {
     domains: ['https://firebasestorage.googleapis.com'],
   },
-  async redirects() {
+  redirects() {
     return [
       {
         source: '/',

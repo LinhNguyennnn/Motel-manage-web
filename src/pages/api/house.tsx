@@ -1,6 +1,8 @@
+import {AxiosResponse} from 'axios';
+
 import instance from './instance';
 
-export const listHouse = (userData: any) => {
+export const listHouse = (userData: any): Promise<AxiosResponse<any, any>> => {
   const url = `/house/${userData?.user?._id}`;
   return instance.get(url, {
     headers: {
@@ -9,7 +11,7 @@ export const listHouse = (userData: any) => {
   });
 };
 
-export const addHouse = (data: any) => {
+export const addHouse = (data: any): Promise<AxiosResponse<any, any>> => {
   const url = `/house/${data?.userData?.user?._id}`;
   return instance.post(url, data, {
     headers: {
@@ -18,7 +20,7 @@ export const addHouse = (data: any) => {
   });
 };
 
-export const removeHouses = (data: any) => {
+export const removeHouses = (data: any): Promise<AxiosResponse<any, any>> => {
   const url = `/house/${data?._id}`;
   return instance.delete(url, {
     headers: {
@@ -26,7 +28,10 @@ export const removeHouses = (data: any) => {
     },
   });
 };
-export const readHouse = (id_home: string, userData: any) => {
+export const readHouse = (
+  id_home: string,
+  userData: any,
+): Promise<AxiosResponse<any, any>> => {
   const url = `/house/detail/${id_home}`;
   return instance.get(url, {
     headers: {
@@ -34,7 +39,7 @@ export const readHouse = (id_home: string, userData: any) => {
     },
   });
 };
-export const updateHouse = (house: any) => {
+export const updateHouse = (house: any): Promise<AxiosResponse<any, any>> => {
   const url = `/house/${house?._id}`;
   return instance.put(url, house, {
     headers: {
@@ -43,11 +48,15 @@ export const updateHouse = (house: any) => {
   });
 };
 
-export const updateInfoPaymentForHouse = (idHouse: any, user: any, data: any) => {
+export const updateInfoPaymentForHouse = (
+  idHouse: any,
+  user: any,
+  data: any,
+): Promise<AxiosResponse<any, any>> => {
   const url = `/house/updatePayment/${idHouse}`;
   return instance.post(url, data, {
     headers: {
       Authorization: `Bearer ${user?.token}`,
     },
   });
-}
+};

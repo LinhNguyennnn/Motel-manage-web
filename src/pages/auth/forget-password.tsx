@@ -1,9 +1,8 @@
-import Forgetpassword from '@/components/auth/forgetpassword';
 import React from 'react';
 
-type Props = {};
+import Forgetpassword from '@/components/auth/forgetpassword';
 
-const ForgetPassword = (props: Props) => {
+const ForgetPassword: React.FC = () => {
   return <Forgetpassword />;
 };
 

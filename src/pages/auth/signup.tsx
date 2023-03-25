@@ -1,9 +1,8 @@
-import Signup from '@/components/auth/signup';
 import React from 'react';
 
-type Props = {};
+import Signup from '@/components/auth/signup';
 
-const signup = (props: Props) => {
+const signup: React.FC = () => {
   return <Signup />;
 };
 

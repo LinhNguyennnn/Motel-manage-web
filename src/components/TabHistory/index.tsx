@@ -1,7 +1,7 @@
-import React, { Children } from 'react';
+import React, {useState} from 'react';
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 type TabPanelProps = {
@@ -18,24 +18,18 @@ type IData = {
 
 type ITabHistory = {
   data: IData[];
-  valueInit?: number;
 };
 
 function TabHistory(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const {children, value, index, ...other} = props;
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ py: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {...other}>
+      {value === index && <Box sx={{py: 3}}>{children}</Box>}
     </div>
   );
 }
@@ -47,34 +41,39 @@ function a11yProps(index: number) {
   };
 }
 
-export default function TabHistoryComponent({ data, valueInit }: ITabHistory) {
-  const [value, setValue] = React.useState(valueInit || 0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+const TabHistoryComponent: React.FC<ITabHistory> = ({data}) => {
+  const [value, setValue] = useState(0);
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box sx={{width: '100%'}}>
+      <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
         <Tabs
           className="overflow-auto bg-white shadow border rounded-md mt-5"
           value={value}
           onChange={handleChange}
           variant="scrollable"
           // scrollButtons
-          allowScrollButtonsMobile
-        >
+          allowScrollButtonsMobile>
           {data.map((data: IData) => (
-            <Tab className="overflow-auto" key={data.label} label={data?.label} {...a11yProps(data?.value)} />
+            <Tab
+              className="overflow-auto"
+              key={data.label}
+              label={data?.label}
+              {...a11yProps(data?.value)}
+            />
           ))}
-         
         </Tabs>
       </Box>
 
       {data.map((data: IData, index: number) => (
-        <TabHistory key={data.label + 1} value={value} index={index}>
-          {data.children && data.children}
+        <TabHistory key={index} value={value} index={index}>
+          {data.children}
         </TabHistory>
       ))}
     </Box>
   );
-}
+};
+
+export default TabHistoryComponent;

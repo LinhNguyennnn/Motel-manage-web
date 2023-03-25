@@ -1,125 +1,85 @@
-import { useUserContext } from '@/context/UserContext';
-import { faCalculator, faRightFromBracket, faBell } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Link from 'next/link';
-import React, { useEffect, useMemo, useState } from 'react';
-import Modal from 'react-responsive-modal';
-import 'react-responsive-modal/styles.css';
-import { ReactCalculator } from 'simple-react-calculator';
-import { useRouter } from 'next/router';
-import { listReports, listReportStatus } from 'src/pages/api/notification';
-import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {faRightFromBracket, faBell} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {useRouter} from 'next/router';
+
+import {listReportStatus} from 'src/pages/api/notification';
+import {useUserContext} from '@/context/UserContext';
+
 type Props = {
   isShowIcon?: boolean;
 };
 
-const Navbar = (props: Props) => {
-  const { cookies, setLoading, logoutResetData, resetPage, setResetPage, setActives } = useUserContext();
+const Navbar: React.FC<Props> = ({isShowIcon}) => {
   const [status, setStatus] = useState<any>({});
-  const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(false);
-  const [report, setReport] = useState<any>();
-  const userData = cookies?.user;
-  const router = useRouter();
-  const { id } = router.query;
 
-  function closeModal() {
-    setOpen(false);
-  }
-  function closeModal1() {
-    setOpen1(false);
-  }
+  const {logoutResetData, setActives} = useUserContext();
 
-  // ------------------------------------
-  useEffect(() => {
-    if (id) {
-      const newData1 = { id: id, userData: userData };
-      setLoading(true);
-      const getReport = async () => {
-        const { data } = await listReports(newData1);
-        setReport(data.data);
-        setLoading(false);
-      };
-      getReport();
-      setLoading(false);
-    }
-  }, [id, resetPage, setLoading, userData]);
+  const {
+    query: {id},
+    push,
+  } = useRouter();
 
   useEffect(() => {
-    const getStatus = async () => {
-      const { data } = await listReportStatus(id);
-      setStatus(data);
-    };
-
-    setLoading(false);
-
     const intervalId = setInterval(() => {
       if (id) {
-        getStatus();
+        (async () => {
+          const {data} = await listReportStatus(id);
+          setStatus(data);
+        })();
       }
     }, 10000);
-    return () => clearInterval(intervalId);
-  }, [id, setLoading]);
 
-  useEffect(() => {
-    if (id) {
-      const newData1 = { id: id, userData: userData };
-      const getReport = async () => {
-        const { data } = await listReports(newData1);
-        setReport(data.data);
-        setLoading(false);
-      };
-      getReport();
-    }
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [id]);
 
-  const CountValueStatus = useMemo(() => {
-    return (
-      <div>
-        {status.count === 0 ? (<div></div>) : (
-          <div className="absolute left-0 top-0  bg-red-500 rounded-full">
-            <span className="text-sm text-white p-2">{status.count || 0}</span>
-          </div>
-        )}
-      </div>
-    );
-  }, [status.count]);
-
   return (
-    <div>
+    <>
       <nav className="left-0 w-full z-50 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
         <div className="flex w-full mx-auto items-center justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
           <div className="md:flex hidden flex-row items-center w-full justify-end mr-3">
-            {props.isShowIcon === true ? (
-              <div className="relative cursor-pointer" onClick={() => { router.push(`/manager/landlord/${id}/report`); setActives('report') }}>
-                {CountValueStatus}
+            {isShowIcon ? (
+              <div
+                className="relative cursor-pointer"
+                onClick={() => {
+                  push(`/manager/landlord/${id}/report`);
+                  setActives('report');
+                }}>
+                <div>
+                  {status.count === 0 ? (
+                    <div />
+                  ) : (
+                    <div className="absolute left-0 top-0  bg-red-500 rounded-full">
+                      <span className="text-sm text-white p-2">
+                        {status.count || 0}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="p-3">
-                  <FontAwesomeIcon className="w-[20px] text-black" icon={faBell} />
+                  <FontAwesomeIcon
+                    className="w-[20px] text-black"
+                    icon={faBell}
+                  />
                 </div>
               </div>
             ) : (
               <div></div>
             )}
-            <div onClick={() => setOpen(true)} className="cursor-pointer px-4">
-              <FontAwesomeIcon className="w-[16px] text-black" icon={faCalculator} />
-            </div>
             <button
               className="cursor-pointer gap-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              onClick={() => logoutResetData()}
-            >
-              <FontAwesomeIcon className="w-[16px] text-white" icon={faRightFromBracket} /> Đăng xuất
+              onClick={() => logoutResetData()}>
+              <FontAwesomeIcon
+                className="w-[16px] text-white"
+                icon={faRightFromBracket}
+              />
+              Đăng xuất
             </button>
           </div>
         </div>
       </nav>
-      <Modal open={open} onClose={closeModal} center>
-        <div className="w-full text-end">
-          <div className="cursor-pointer" onClick={() => closeModal()}>
-            <button className="btn close-modal border rounded-md px-2 mb-2 bg-gray-300"></button>
-          </div>
-        </div>
-        <ReactCalculator key="Calculator" />
-      </Modal>
       {/* <Modal open={open1} onClose={closeModal1} center>
         <div className="w-full text-end">
           <div>
@@ -175,7 +135,7 @@ const Navbar = (props: Props) => {
           </div>
         </div>
       </Modal> */}
-    </div>
+    </>
   );
 };
 

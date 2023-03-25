@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { faEye, faEyeSlash, faPenToSquare, faTrashCan, faHandPointRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useRouter } from 'next/router';
-import { useUserContext } from '@/context/UserContext';
-import { Toast } from 'src/hooks/toast';
-import { Modal } from 'react-responsive-modal';
-import 'react-responsive-modal/styles.css';
-import { useForm } from 'react-hook-form';
-import { removePeople, updatePeople } from 'src/pages/api/room';
+import React, {useEffect, useState} from 'react';
+import {Modal} from 'react-responsive-modal';
+import {useForm} from 'react-hook-form';
+import {useRouter} from 'next/router';
+import {
+  faEye,
+  faEyeSlash,
+  faPenToSquare,
+  faTrashCan,
+  faHandPointRight,
+} from '@fortawesome/free-solid-svg-icons';
+
+import {removePeople, updatePeople} from 'src/pages/api/room';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import ModalChangeMember from './modal-change-member';
+import {useUserContext} from '@/context/UserContext';
+import {Toast} from 'src/hooks/toast';
 
 export type IMember = {
   status: boolean;
@@ -17,8 +23,9 @@ export type IMember = {
   memberName: string;
   cardNumber: string;
   phoneNumber: string;
-  handleResetPage: () => void
+  handleResetPage: () => void;
 };
+
 export type IMember2 = {
   _id: string;
   id: string;
@@ -30,18 +37,18 @@ export type IMember2 = {
   listMember: object;
 };
 
-const ListMember = (props: IMember) => {
-  const { _id, memberName, phoneNumber, cardNumber, status } = props;
+const ListMember: React.FC<IMember> = props => {
+  const {_id, memberName, phoneNumber, cardNumber, status} = props;
   const [hiddenPhone, setHiddenphone] = useState<boolean>(true);
   const [check, setCheck] = useState<string>('');
   const [hiddenCardNumber, setHiddenCardNumber] = useState<boolean>(true);
-  const { cookies, setLoading, user } = useUserContext();
-  const [modalChangeOneMember, setModalChangeOneMember] = useState<boolean>(false);
+  const {cookies, setLoading} = useUserContext();
+  const [modalChangeOneMember, setModalChangeOneMember] =
+    useState<boolean>(false);
   const userData = cookies?.user;
   const router = useRouter();
   const param = router.query;
-  const idRoom = (param.id_room);
-
+  const idRoom = param.id_room;
 
   const [open, setOpen] = useState(false);
   const onCloseModal = () => setOpen(false);
@@ -50,58 +57,59 @@ const ListMember = (props: IMember) => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
 
   useEffect(() => {
-    reset(props)
-  }, [])
+    reset(props);
+  }, [props, reset]);
+
   const onHandleOpenModalChangeMember = () => {
     setModalChangeOneMember(true);
     setCheck('1');
-
-  }
-  const onSubmit = async (listMember: any) => {
-
-    const newData = {
-      id: listMember._id,
-      memberName: listMember.memberName,
-      phoneNumber: listMember.phoneNumber,
-      cardNumber: listMember.cardNumber,
-      status: listMember.status
-    }
-    setLoading(true);
-    await updatePeople(newData, idRoom).then((result) => {
-      setLoading(false);
-      setOpen(false);
-      Toast('success', result.data.message);
-    }).catch((err) => {
-
-      setLoading(false);
-      Toast('error', err?.response?.data?.message);
-    }).finally(() => {
-      props.handleResetPage()
-    });
   };
-
+  const onSubmit = async (listMember: any) => {
+    setLoading(true);
+    await updatePeople(
+      {
+        id: listMember._id,
+        memberName: listMember.memberName,
+        phoneNumber: listMember.phoneNumber,
+        cardNumber: listMember.cardNumber,
+        status: listMember.status,
+      },
+      idRoom,
+    )
+      .then(result => {
+        setOpen(false);
+        Toast('success', result.data.message);
+      })
+      .catch(err => {
+        Toast('error', err?.response?.data?.message);
+      })
+      .finally(() => {
+        setLoading(false);
+        props.handleResetPage();
+      });
+  };
 
   const removeRoom = async (props: IMember) => {
     const confirm = window.confirm('Bạn có muốn xóa không?');
     if (confirm) {
       setLoading(true);
-      const newData = { ...props, userData: userData };
-      await removePeople(param.id_room, newData).then((result) => {
-        Toast('success', result.data.message);
-        setLoading(false);
-
-      }).catch((error) => {
-
-        Toast('error', error.message);
-        setLoading(false);
-      }).finally(() => {
-        props.handleResetPage()
-      })
-
+      const newData = {...props, userData: userData};
+      await removePeople(param.id_room, newData)
+        .then(result => {
+          Toast('success', result.data.message);
+          setLoading(false);
+        })
+        .catch(error => {
+          Toast('error', error.message);
+          setLoading(false);
+        })
+        .finally(() => {
+          props.handleResetPage();
+        });
     } else {
       setLoading(false);
     }
@@ -134,7 +142,8 @@ const ListMember = (props: IMember) => {
         </div>
         <div className="flex flex-row justify-between">
           <div className="cart-number">
-            <strong>CMND/CCCD:</strong> {showData(cardNumber, !hiddenCardNumber)}
+            <strong>CMND/CCCD:</strong>{' '}
+            {showData(cardNumber, !hiddenCardNumber)}
           </div>
           <FontAwesomeIcon
             className="w-[20px] text-[10px] pt-[2px]"
@@ -143,31 +152,41 @@ const ListMember = (props: IMember) => {
             size={'lg'}
           />
         </div>
-        <div className="name-member">{status == true ? <div>Chủ Phòng</div> : <div>Thành viên</div>}</div>
+        <div className="name-member">
+          {status == true ? <div>Chủ Phòng</div> : <div>Thành viên</div>}
+        </div>
 
         <div className="control-member flex flex-row gap-2">
           <div
             onClick={onOpenModal}
-            className="rounded edit-member flex flex-row gap-2 p-2 bg-blue-500 text-white border border-solid border-blue-500 base-1/2 cursor-pointer"
-          >
-            <FontAwesomeIcon className="w-[10px] text-[10px] pt-[2px]" icon={faPenToSquare} height={20} />
+            className="rounded edit-member flex flex-row gap-2 p-2 bg-blue-500 text-white border border-solid border-blue-500 base-1/2 cursor-pointer">
+            <FontAwesomeIcon
+              className="w-[10px] text-[10px] pt-[2px]"
+              icon={faPenToSquare}
+              height={20}
+            />
             <span>Sửa</span>
           </div>
           <div className="rounded edit-member flex flex-row gap-2 p-2 bg-red-500 hover:bg-red-400 text-white border border-solid border-red-500 hover:border-red-400 base-1/2 cursor-pointer">
-            <FontAwesomeIcon className="w-[10px] text-[10px] pt-[2px]" icon={faTrashCan} height={20} />
+            <FontAwesomeIcon
+              className="w-[10px] text-[10px] pt-[2px]"
+              icon={faTrashCan}
+              height={20}
+            />
             <span
               onClick={() => {
                 removeRoom(props);
-              }}
-            >
+              }}>
               Xóa
             </span>
           </div>
           <div className="rounded edit-member flex flex-row gap-2 p-2 bg-blue-500 text-white border border-solid border-blue-500 base-1/2 cursor-pointer">
-            <FontAwesomeIcon className="w-[10px] text-[10px] pt-[2px]" icon={faHandPointRight} height={20} />
-            <span
-              onClick={() => onHandleOpenModalChangeMember()}
-            >
+            <FontAwesomeIcon
+              className="w-[10px] text-[10px] pt-[2px]"
+              icon={faHandPointRight}
+              height={20}
+            />
+            <span onClick={() => onHandleOpenModalChangeMember()}>
               Chuyển phòng
             </span>
           </div>
@@ -178,9 +197,13 @@ const ListMember = (props: IMember) => {
               <h2 className="pt-2 text-xl">Cập nhật thành viên </h2>
             </div>{' '}
             <div className="border  p-2 ">
-              <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
+              <form
+                className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="username">
                     Tên thành viên
                   </label>
                   <input
@@ -188,33 +211,39 @@ const ListMember = (props: IMember) => {
                     id="name"
                     type="text"
                     placeholder="Xin mời nhập tên thành viên"
-                    {...register('memberName', { required: true, minLength: 6 })}
+                    {...register('memberName', {required: true, minLength: 6})}
                   />
                   {errors.memberName?.type === 'required' && (
-                    <span className="text-[red] mt-1 block">Vui lòng nhập tên thành viên!</span>
+                    <span className="text-[red] mt-1 block">
+                      Vui lòng nhập tên thành viên!
+                    </span>
                   )}
                   {errors.memberName?.type === 'minLength' && (
-                    <span className="text-[red] mt-1 block">Tên thành viên phải tối thiểu 6 ký tự!</span>
+                    <span className="text-[red] mt-1 block">
+                      Tên thành viên phải tối thiểu 6 ký tự!
+                    </span>
                   )}
                 </div>
 
                 <div className="col-span-6">
-                  <label className="block text-gray-700 text-sm font-bold" htmlFor="username">
+                  <label
+                    className="block text-gray-700 text-sm font-bold"
+                    htmlFor="username">
                     Chức vụ
                   </label>
 
                   <select
                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     {...register('status')}
-                    id="status"
-                  >
+                    id="status">
                     <option value="true">Người đại diện</option>
                     <option value="false">Thành viên</option>
                   </select>
-
                 </div>
                 <div className="mb-4 mt-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="username">
                     CMND/CCCD
                   </label>
                   <input
@@ -226,24 +255,34 @@ const ListMember = (props: IMember) => {
                       required: true,
                       minLength: 9,
                       maxLength: 12,
-                      pattern: /^[0-9]+$/
+                      pattern: /^[0-9]+$/,
                     })}
                   />
                   {errors.cardNumber?.type === 'required' && (
-                    <span className="text-[red] mt-1 block">Vui lòng nhập số CMND/CCCD!</span>
+                    <span className="text-[red] mt-1 block">
+                      Vui lòng nhập số CMND/CCCD!
+                    </span>
                   )}
                   {errors.cardNumber?.type === 'minLength' && (
-                    <span className="text-[red] mt-1 block">Số CMND/CCCD không đúng dịnh dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số CMND/CCCD không đúng dịnh dạng!
+                    </span>
                   )}
                   {errors.cardNumber?.type === 'maxLength' && (
-                    <span className="text-[red] mt-1 block">Số CMND/CCCD không đúng dịnh dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số CMND/CCCD không đúng dịnh dạng!
+                    </span>
                   )}
                   {errors.cardNumber?.type === 'pattern' && (
-                    <span className="text-[red] mt-1 block">Số CMND/CCCD không đúng dịnh dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số CMND/CCCD không đúng dịnh dạng!
+                    </span>
                   )}
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                  <label
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                    htmlFor="username">
                     Số điện thoại
                   </label>
                   <input
@@ -255,28 +294,36 @@ const ListMember = (props: IMember) => {
                       required: true,
                       minLength: 10,
                       maxLength: 10,
-                      pattern: /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/
+                      pattern:
+                        /^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$/,
                     })}
                   />
                   {errors.phoneNumber?.type === 'required' && (
-                    <span className="text-[red] mt-1 block">Vui lòng nhập số điện thoại!</span>
+                    <span className="text-[red] mt-1 block">
+                      Vui lòng nhập số điện thoại!
+                    </span>
                   )}
                   {errors.phoneNumber?.type === 'minLength' && (
-                    <span className="text-[red] mt-1 block">Số điện thoại không đúng định dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số điện thoại không đúng định dạng!
+                    </span>
                   )}
                   {errors.phoneNumber?.type === 'maxLength' && (
-                    <span className="text-[red] mt-1 block">Số điện thoại không đúng định dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số điện thoại không đúng định dạng!
+                    </span>
                   )}
                   {errors.phoneNumber?.type === 'pattern' && (
-                    <span className="text-[red] mt-1 block">Số điện thoại không đúng định dạng!</span>
+                    <span className="text-[red] mt-1 block">
+                      Số điện thoại không đúng định dạng!
+                    </span>
                   )}
                 </div>
 
                 <div className="flex items-center">
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                  >
+                    type="submit">
                     Cập nhật
                   </button>
                 </div>
@@ -284,7 +331,15 @@ const ListMember = (props: IMember) => {
             </div>
           </div>
         </Modal>
-        <ModalChangeMember openModal={modalChangeOneMember} setOpenModal={setModalChangeOneMember} name={memberName} phoneNumber={phoneNumber} cardNumber={cardNumber} idMember={_id} data='' check={check}></ModalChangeMember>
+        <ModalChangeMember
+          openModal={modalChangeOneMember}
+          setOpenModal={setModalChangeOneMember}
+          name={memberName}
+          phoneNumber={phoneNumber}
+          cardNumber={cardNumber}
+          idMember={_id}
+          data=""
+          check={check}></ModalChangeMember>
       </div>
     </div>
   );

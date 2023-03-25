@@ -1,14 +1,9 @@
-import ChangePassword from '@/components/auth/changePassword'
-import React from 'react'
+import React from 'react';
 
-type Props = {}
+import ChangePassword from '@/components/auth/changePassword';
 
-const changePassword = (props: Props) => {
-  return (
-    <div>
-      <ChangePassword/>
-    </div>
-  )
-}
+const changePassword: React.FC = () => {
+  return <ChangePassword />;
+};
 
-export default changePassword
+export default changePassword;

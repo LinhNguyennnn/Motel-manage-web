@@ -1,56 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { getDetailBillServiceByMonthYear } from 'src/pages/api/statistical';
-import type { DatePickerProps } from 'antd';
-import { DatePicker, Space } from 'antd';
+import React, {useEffect, useState} from 'react';
+import {DatePicker} from 'antd';
 import moment from 'moment';
-import 'antd/dist/antd.css';
-import { useUserContext } from '@/context/UserContext';
 
-type Props = {};
+import {getDetailBillServiceByMonthYear} from 'src/pages/api/statistical';
+import {useUserContext} from '@/context/UserContext';
 
-const ListElectricity = (props: Props) => {
-  const today = new Date();
+const today = new Date();
 
+const ListElectricity: React.FC = () => {
   const [monthCheck, setMonth] = useState(today.getMonth() + 1);
   const [yearCheck, setYear] = useState(today.getFullYear());
-  const [listBillData, setListBillData] = useState<any>([]);
-  const [codeRoom, setCodeRoom] = useState<any>();
-  const { cookies } = useUserContext();
+  const [listBillData, setListBillData] = useState<{
+    outputValue: number;
+    inputValue: number;
+  }>({inputValue: 0, outputValue: 0});
+
+  const {cookies, setLoading} = useUserContext();
 
   useEffect(() => {
-    const data = cookies?.code_room;
-    setCodeRoom(data as any);
-  }, [cookies?.code_room]);
-
-
-  var NameBuild = 'dien';
-
-  const YearStatistical = new Date().getFullYear();
-  const datePickerShow = React.useMemo(() => {
-    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-      setMonth(parseInt(dateString.slice(5, 7)));
-      setYear(parseInt(dateString.slice(0, 4)));
-    };
-    return (
-      <DatePicker
-        style={{ width: '200px' }}
-        onChange={onChange}
-        defaultValue={moment(`${yearCheck}-${monthCheck}`, 'YYYY-MM')}
-        picker="month"
-      />
-    );
-  }, [monthCheck, yearCheck]);
-
-  useEffect(() => {
-    if (codeRoom?._id) {
-      const getListBillData = async () => {
-        const { data } = await getDetailBillServiceByMonthYear(codeRoom?._id, NameBuild, monthCheck, yearCheck)
-        setListBillData(data.data)
-      };
-      getListBillData();
+    if (cookies?.code_room?._id) {
+      (async () => {
+        setLoading(true);
+        const {data} = await getDetailBillServiceByMonthYear(
+          cookies.code_room._id,
+          'dien',
+          monthCheck,
+          yearCheck,
+        );
+        setListBillData(data.data);
+        setLoading(false);
+      })();
     }
-  }, [codeRoom?._id, monthCheck, yearCheck, NameBuild]);
-
+  }, [cookies?.code_room?._id, monthCheck, yearCheck, setLoading]);
 
   return (
     <div className="h-screen">
@@ -62,29 +43,27 @@ const ListElectricity = (props: Props) => {
                 quản lý số điện hàng tháng
               </h2>
             </div>
-            <div className="mt-5 flex lg:mt-0 lg:ml-4">
-              <form>
-                <input
-                  type="text"
-                  name="keyword"
-                  className="text-black shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Tìm kiếm..."
-                />
-              </form>
-            </div>
           </div>
         </div>
       </header>
       <main>
         <div className="block p-2">
           <h3>Chọn tháng năm</h3>
-          <Space direction="vertical">{datePickerShow}</Space>
+          <DatePicker
+            style={{width: '200px'}}
+            onChange={(_, dateString) => {
+              setMonth(parseInt(dateString.slice(5, 7)));
+              setYear(parseInt(dateString.slice(0, 4)));
+            }}
+            defaultValue={moment(`${yearCheck}-${monthCheck}`, 'YYYY-MM')}
+            allowClear={false}
+            picker="month"
+          />
         </div>
         <div className="max-w-full mx-auto py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col">
             <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className='p-4'>
-              </div>
+              <div className="p-4" />
               <div className="py-2 align-middle inline-block min-w-full ">
                 <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                   <table className="min-w-full divide-y divide-gray-200">
@@ -92,27 +71,23 @@ const ListElectricity = (props: Props) => {
                       <tr>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Tháng
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Số điện cũ
                         </th>
 
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Số điện mới
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Số điện tiêu thu (KWH)
                         </th>
                       </tr>
@@ -120,17 +95,23 @@ const ListElectricity = (props: Props) => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       <tr>
                         <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                          <div className="text-center">{monthCheck}</div>
+                          <p className="text-center mb-0">{monthCheck}</p>
                         </td>
                         <td className="px-6 py-4 whitespace">
-                          <div className="text-center">{listBillData.inputValue}</div>
+                          <p className="text-center mb-0">
+                            {listBillData.inputValue}
+                          </p>
                         </td>
 
                         <td className="px-6 py-4 whitespace">
-                          <div className="text-center">{listBillData.outputValue}</div>
+                          <p className="text-center mb-0">
+                            {listBillData.outputValue}
+                          </p>
                         </td>
                         <td className="px-6 py-4 whitespace text-yellow-500 font-bold">
-                          <div className="text-center">{listBillData.outputValue - listBillData.inputValue}</div>
+                          <p className="text-center mb-0">
+                            {listBillData.outputValue - listBillData.inputValue}
+                          </p>
                         </td>
                       </tr>
                     </tbody>

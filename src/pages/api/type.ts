@@ -7,7 +7,7 @@ export interface IChangeOneMember {
     phoneNumber: string;
   };
   idNewRoom: string;
-  userData?: { token?: string };
+  userData?: {token?: string};
 }
 export interface IChangeAllMember {
   idOldRoom: string | undefined | string[];
@@ -18,5 +18,5 @@ export interface IChangeAllMember {
     phoneNumber: string;
   }[];
   idNewRoom: string;
-  userData?: { token?: string };
+  userData?: {token?: string};
 }

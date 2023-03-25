@@ -1,37 +1,39 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { Toast } from 'src/hooks/toast';
-import { SignIn } from 'src/pages/api/auth';
-import { useUserContext } from '../../context/UserContext';
+import {SubmitHandler, useForm} from 'react-hook-form';
+import {useRouter} from 'next/router';
+import Link from 'next/link';
 
-type Props = {};
+import {useUserContext} from '../../context/UserContext';
+import {SignIn} from 'src/pages/api/auth';
+import {Toast} from 'src/hooks/toast';
 
 type FormValues = {
   email: string;
   password: string;
 };
 
-const Signin = (props: Props) => {
-  const { setLoading, setCookie } = useUserContext();
+const Signin: React.FC = () => {
+  const {setLoading, setCookie} = useUserContext();
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm<FormValues>();
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+  const onSubmit: SubmitHandler<FormValues> = async data => {
     setLoading(true);
     await SignIn(data)
-      .then(({ data }) => {
+      .then(({data}) => {
         setLoading(false);
-        setCookie('user', JSON.stringify(data), { path: '/', maxAge: 30 * 24 * 60 * 60 });
+        setCookie('user', JSON.stringify(data), {
+          path: '/',
+          maxAge: 30 * 24 * 60 * 60,
+        });
         Toast('success', 'Đăng nhập thành công');
-        router.push(`/`);
+        router.push('/');
       })
-      .catch((error) => {
+      .catch(error => {
         Toast('error', error?.response?.data?.message);
         setLoading(false);
       });
@@ -41,8 +43,13 @@ const Signin = (props: Props) => {
     <div className="min-h-[700px] flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="rounded bg-white max-w-md overflow-hidden shadow-xl p-5 space-y-8">
-          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 uppercase">đăng nhập</h2>
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+          <h2 className="mt-6 text-center text-3xl font-bold text-gray-900 uppercase">
+            đăng nhập
+          </h2>
+          <form
+            className="space-y-6"
+            onSubmit={handleSubmit(onSubmit)}
+            encType="multipart/form-data">
             <div className="mt-4">
               <label className="block" htmlFor="email">
                 Địa chỉ email <span className="text-[red]">*</span>
@@ -58,10 +65,14 @@ const Signin = (props: Props) => {
                 })}
               />
               {errors.email?.type === 'required' && (
-                <span className="text-[red] mt-1 block">Vui lòng nhập địa chỉ email!</span>
+                <span className="text-[red] mt-1 block">
+                  Vui lòng nhập địa chỉ email!
+                </span>
               )}
               {errors.email?.type === 'pattern' && (
-                <span className="text-[red] mt-1 block">Địa chỉ email không đúng định dạng!</span>
+                <span className="text-[red] mt-1 block">
+                  Địa chỉ email không đúng định dạng!
+                </span>
               )}
             </div>
             <div className="mt-4">
@@ -72,15 +83,19 @@ const Signin = (props: Props) => {
                 type="password"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                 placeholder="Nhập mật khẩu"
-                {...register('password', { required: true })}
+                {...register('password', {required: true})}
               />
               {errors.password?.type === 'required' && (
-                <span className="text-[red] mt-1 block">Vui lòng nhập mật khẩu!</span>
+                <span className="text-[red] mt-1 block">
+                  Vui lòng nhập mật khẩu!
+                </span>
               )}
             </div>
             <div className="flex items-center justify-end">
-              <Link href={`/auth/forget-password`}>
-                <a className="text-sm text-blue-600 hover:underline">Quên mật khẩu?</a>
+              <Link href="/auth/forget-password">
+                <a className="text-sm text-blue-600 hover:underline">
+                  Quên mật khẩu?
+                </a>
               </Link>
             </div>
             <div className="flex mt-[20px]">
