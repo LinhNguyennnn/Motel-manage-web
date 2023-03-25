@@ -1,9 +1,8 @@
-import Resetpassword from '@/components/auth/resetPassword';
 import React from 'react';
 
-type Props = {};
+import Resetpassword from '@/components/auth/resetPassword';
 
-const ResetPassword = (props: Props) => {
+const ResetPassword: React.FC = () => {
   return <Resetpassword />;
 };
 

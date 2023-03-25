@@ -1,49 +1,40 @@
-import { Table } from 'antd'
-import moment from 'moment'
-import React, { useState } from 'react'
-import 'antd/dist/antd.css';
+import React from 'react';
+import moment from 'moment';
+import {Table} from 'antd';
 
-const { Column, ColumnGroup } = Table;
+const {Column} = Table;
+
 type Props = {
-    data: any
-}
+  data: any;
+};
 
-const TabPeople = ({ data }: Props) => {
+const TabPeople: React.FC<Props> = ({data}) => {
+  return (
+    <Table
+      dataSource={data
+        .filter((item: {model: string}) => item.model === 'Room')
+        .map((item: any, index: number) => ({
+          key: index,
+          index: index + 1,
+          content: item.content,
+          title: item.title,
+          date: moment(item.createdAt).format('DD/MM/YYYY'),
+        }))}
+      pagination={{pageSize: 6}}>
+      <Column title="STT" dataIndex="index" key="index" />
+      <Column title="Tiêu đề" dataIndex="title" key="title" />
+      <Column
+        title="Nội dung"
+        dataIndex="content"
+        key="content"
+        width={500}
+        render={content => {
+          return <div dangerouslySetInnerHTML={{__html: content}}></div>;
+        }}
+      />
+      <Column title="Ngày" dataIndex="date" key="date" />
+    </Table>
+  );
+};
 
-
-    const femaleStudents = data.filter((item: { model: string }, index: any) => {
-        return item.model === 'Room';
-    })
-
-    return (
-        <div>
-            <Table
-                dataSource={femaleStudents?.map((item: { _id: any; roomName: any; title: any; content: any; model: any; createdAt: moment.MomentInput }, index: number) => ({
-                    index: index + 1,
-                    content: item.content,
-                    model: item.model,
-                    title: item.title,
-                    date: moment(item.createdAt).format('DD/MM/YYYY'),
-                }))}
-                pagination={{ pageSize: 6 }}
-            >
-                <Column title="STT" dataIndex="index" key="name" />
-                <Column title="Tiêu đề" dataIndex="title" key="title" />
-                <Column title="Nội dung" dataIndex="content" key="contents" width={500} render={(content) => {
-                    return (
-                        <div dangerouslySetInnerHTML={{ __html: content }}></div>
-                    )
-                }} />
-                <Column title="Ngày " dataIndex="date" key="date" />
-
-            </Table>
-
-
-
-        </div>
-
-
-    )
-}
-
-export default TabPeople
+export default TabPeople;

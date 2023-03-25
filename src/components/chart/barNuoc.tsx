@@ -1,9 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useRouter } from 'next/router';
+import React from 'react';
+import {useRouter} from 'next/router';
+import {Bar} from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export const options = {
   responsive: true,
@@ -17,8 +32,8 @@ export const options = {
       display: true,
       text: 'Số lượng nước tiêu thụ hàng tháng',
       font: {
-        size: 24
-      }
+        size: 24,
+      },
     },
   },
 };
@@ -38,39 +53,30 @@ const labels = [
   'Tháng 12',
 ];
 
-const BarNuoc = (dataNuoc: any) => {
+type Props = {
+  dataNuoc: any;
+};
+
+const BarNuoc: React.FC<Props> = ({dataNuoc}) => {
   const router = useRouter();
-  const { id } = router.query;
-  if (id) {
-    var data = {
-      labels,
-      datasets: [
-        {
-          label: 'Số nước',
-          data: dataNuoc.dataNuoc,
-          backgroundColor: 'rgb(153,255,255)',
-          borderWidth: 1,
-        }
-      ],
-    };
-  }
-  else {
-    var data = {
-      labels,
-      datasets: [
-        {
-          label: 'Số nước',
-          data: dataNuoc.dataNuoc.result,
-          backgroundColor: 'rgb(153,255,255)',
-          borderWidth: 1,
-        }
-      ],
-    };
-  }
+  const {id} = router.query;
 
   return (
     <div className="block h-[300px] lg:h-[400px]">
-      <Bar options={options} data={data} />
+      <Bar
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: 'Số nước',
+              data: id ? dataNuoc : dataNuoc.result,
+              backgroundColor: 'rgb(153,255,255)',
+              borderWidth: 1,
+            },
+          ],
+        }}
+      />
     </div>
   );
 };

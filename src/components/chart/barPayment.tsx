@@ -1,9 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
-import { useRouter } from 'next/router';
+import React from 'react';
+import {useRouter} from 'next/router';
+import {Bar} from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 export const options = {
   responsive: true,
@@ -17,8 +32,8 @@ export const options = {
       display: true,
       text: 'Doanh thu hàng tháng',
       font: {
-        size: 24
-      }
+        size: 24,
+      },
     },
   },
 };
@@ -38,54 +53,37 @@ const labels = [
   'Tháng 12',
 ];
 
-const BarPayment = (dataPayment: any) => {
-  const router = useRouter();
-  const { id } = router.query;
-  if (id) {
-    var data = {
-      labels,
-      datasets: [
+type Props = {
+  dataPayment: any;
+};
 
-        {
-          label: 'Số tiền đã thu',
-          data: dataPayment.dataPayment.fullPayment,
-          backgroundColor: 'rgb(153, 255, 153)',
-          borderWidth: 1,
-        },
-        {
-          label: 'Tổng số tiền',
-          data: dataPayment.dataPayment.allPayment,
-          backgroundColor: 'rgb(255, 153, 153)',
-          borderWidth: 1,
-        },
-      ],
-    };
-  }
-  else {
-    var data = {
-      labels,
-      datasets: [
-        {
-          label: 'Số điện',
-          data: dataPayment.dataPayment.allPayment,
-          backgroundColor: 'rgb(153, 255, 153)',
-          borderWidth: 1,
-        },
-        {
-          label: 'Số nước',
-          data: dataPayment.dataPayment.fullPayment,
-          backgroundColor: 'rgb(255, 153, 153)',
-          borderWidth: 1,
-        }
-      ],
-    };
-  }
+const BarPayment: React.FC<Props> = ({dataPayment}) => {
+  const router = useRouter();
+  const {id} = router.query;
 
   return (
     <div className="block h-[300px] lg:h-[400px]">
-      <Bar options={options} data={data} />
+      <Bar
+        options={options}
+        data={{
+          labels,
+          datasets: [
+            {
+              label: id ? 'Số tiền đã thu' : 'Số điện',
+              data: id ? dataPayment.fullPayment : dataPayment.allPayment,
+              backgroundColor: 'rgb(153, 255, 153)',
+              borderWidth: 1,
+            },
+            {
+              label: id ? 'Tổng số tiền' : 'Số nước',
+              data: id ? dataPayment.allPayment : dataPayment.fullPayment,
+              backgroundColor: 'rgb(255, 153, 153)',
+              borderWidth: 1,
+            },
+          ],
+        }}
+      />
     </div>
   );
 };
 export default BarPayment;
-

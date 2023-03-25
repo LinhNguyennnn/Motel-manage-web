@@ -1,63 +1,51 @@
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
-import { useUserContext } from '@/context/UserContext';
-import { getBillLiquidation } from 'src/pages/api/bill';
-import { listRoom } from 'src/pages/api/room';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from 'next/router';
 import moment from 'moment';
+
+import {useUserContext} from '@/context/UserContext';
+import {getBillLiquidation} from 'src/pages/api/bill';
+import {listRoom} from 'src/pages/api/room';
 import ModalDeatil from './ModalDeatil';
 
-type Props = {}
-
-const LiquidationBill = (props: Props) => {
+const LiquidationBill: React.FC = () => {
   const router = useRouter();
   const param = router.query;
-  const { cookies, setLoading } = useUserContext();
+  const {cookies, setLoading} = useUserContext();
   const userData = cookies?.user;
-  const [listBillLiqui, setListBillLiqui] = useState<any>([])
+  const [listBillLiqui, setListBillLiqui] = useState<any>([]);
   const [listRooms, setListRooms] = useState<any[]>([]);
   const [detailBill, setDetailBill] = useState<any[]>([]);
 
   const [open, setOpen] = useState(false);
   const onCloseModal = () => setOpen(false);
 
-
   useEffect(() => {
     if (param?.id) {
-      const getBillLiqui = async () => {
+      (async () => {
         setLoading(true);
         try {
-          const { data } = await getBillLiquidation(param?.id as string)
-          if (data) {
-            setListBillLiqui(data.data)
-            setLoading(false);
+          const results = await Promise.all([
+            getBillLiquidation(param.id as string),
+            listRoom(param.id, userData),
+          ]);
+          if (results[0].data) {
+            setListBillLiqui(results[0].data.data);
           }
-        } catch (error) {
+          if (results[1].data) {
+            setListRooms(results[1].data.data);
+          }
+        } finally {
           setLoading(false);
         }
-
-      }
-      getBillLiqui()
+      })();
     }
-  }, [param?.id, setLoading])
-  useEffect(() => {
-    if (param?.id) {
-      const getListRoom = async () => {
-        const { data } = await listRoom(param?.id, userData);
-        setListRooms(data.data);
-      };
-      getListRoom();
-    }
-  }, [param?.id, userData]);
-  console.log(listBillLiqui)
+  }, [param, setLoading, userData]);
 
-  const onSubmit = (_id: any) => { 
-    let target = listBillLiqui?.find((item: any) => item?._id == _id);
-    setDetailBill(target)
+  const onSubmit = (_id: any) => {
+    const target = listBillLiqui?.find((item: any) => item?._id == _id);
+    setDetailBill(target);
     setOpen(true);
-    console.log(target);
-  }
-
-
+  };
 
   return (
     <div className="h-screen">
@@ -83,71 +71,79 @@ const LiquidationBill = (props: Props) => {
                       <tr>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           STT
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Tên người đại diện
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Phòng
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Ngày thanh lý
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
-
-                        </th>
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {listBillLiqui &&
-                        listBillLiqui?.map((item: any, index: any) => {
-                          const idRoom = item?.idRoom;
-                          let target = listRooms?.find((item: any) => item?._id == idRoom);
-                          let roomName = target?.name ?? ""
-                          let timeAgo = moment(item?.createdAt).format('DD/MM/YYYY');
-                          return (
-                            <tr key={index}>
-                              <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                                <div className="text-center">{index + 1}</div>
-                              </td>
-                              <td className="px-6 py-4 whitespace">
-                                <div className="text-center">{item?.detailRoom?.listMember?.map((item: any, index: any) => {
-                                  return (
-                                    <div key={index}>
-                                      {item.status === true ? <p>{item?.memberName}</p> : ""}
-                                    </div>
-                                  )
-                                })}</div>
-                              </td>
-                              <td className="px-6 py-4 whitespace">
-                                <div className="text-center">{roomName}</div>
-                              </td>
-                              <td className="px-6 py-4 whitespace">
-                                <div className="text-center">{timeAgo}</div>
-                              </td>
-                              <td className="px-6 py-4 whitespace">
-                                <div className="text-center">
-                                  <button className="flex py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={()=> onSubmit(item?._id)}  >Xem chi tiết</button>
-                                </div>
-                              </td>
-                            </tr>
-                          )
-                        })}
+                      {listBillLiqui?.map((item: any, index: any) => {
+                        const idRoom = item?.idRoom;
+                        const target = listRooms?.find(
+                          (item: any) => item?._id == idRoom,
+                        );
+                        const roomName = target?.name ?? '';
+                        const timeAgo = moment(item?.createdAt).format(
+                          'DD/MM/YYYY',
+                        );
+                        return (
+                          <tr key={index}>
+                            <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                              <div className="text-center">{index + 1}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">
+                                {item?.detailRoom?.listMember?.map(
+                                  (item: any, index2: any) => {
+                                    return (
+                                      <div key={index2}>
+                                        {item.status === true ? (
+                                          <p>{item?.memberName}</p>
+                                        ) : (
+                                          ''
+                                        )}
+                                      </div>
+                                    );
+                                  },
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">{roomName}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">{timeAgo}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace">
+                              <div className="text-center">
+                                <button
+                                  className="flex py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                  onClick={() => onSubmit(item?._id)}>
+                                  Xem chi tiết
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -156,9 +152,13 @@ const LiquidationBill = (props: Props) => {
           </div>
         </div>
       </main>
-      <ModalDeatil open={open} onCloseModal={onCloseModal} setOpen={setOpen} detailBill={ detailBill} />
+      <ModalDeatil
+        open={open}
+        onCloseModal={onCloseModal}
+        detailBill={detailBill}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default LiquidationBill
+export default LiquidationBill;

@@ -1,19 +1,26 @@
-import Navbar from '@/components/AdminNavbar';
+import React, {ReactNode} from 'react';
+import {CircleSpinnerOverlay} from 'react-spinner-overlay';
+
 import SideBarTenants from '@/components/SideBarTenants';
-import { useUserContext } from '@/context/UserContext';
-import React, { ReactNode } from 'react';
-import { CircleSpinnerOverlay } from 'react-spinner-overlay';
+import {useUserContext} from '@/context/UserContext';
+import Navbar from '@/components/AdminNavbar';
 
 type Props = {
   children: ReactNode;
 };
 
-const LayoutTenants = ({ children }: Props) => {
-  const { loading } = useUserContext();
+const LayoutTenants: React.FC<Props> = ({children}) => {
+  const {loading} = useUserContext();
 
   return (
-    <div>
-      {<CircleSpinnerOverlay loading={loading} color="#2563eb" size={100} message="Loadinggg" zIndex={9999} />}
+    <>
+      <CircleSpinnerOverlay
+        loading={loading}
+        color="#2563eb"
+        size={100}
+        message="Loading"
+        zIndex={9999}
+      />
       <SideBarTenants />
       <Navbar isShowIcon={false} />
       <div className="relative md:ml-64 bg-blueGray-100">
@@ -23,7 +30,7 @@ const LayoutTenants = ({ children }: Props) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

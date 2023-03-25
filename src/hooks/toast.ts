@@ -1,12 +1,6 @@
-import React from 'react';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 
-type Props = {
-  message: string;
-  type: string;
-};
-
-export const Toast = (type: string, message: string) => {
+export const Toast = (type: string, message: string): void => {
   switch (type) {
     case 'success':
       toast.success(message, {

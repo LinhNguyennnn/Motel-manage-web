@@ -1,70 +1,53 @@
+import React, {useState, useEffect} from 'react';
+import {useRouter} from 'next/router';
 
-
-import TabHistoryComponent from '@/components/TabHistory'
-import TabPeople from '@/components/TabPeople';
-import React, { useState,useEffect } from 'react'
-import { useRouter } from 'next/router';
-import { useUserContext } from '@/context/UserContext';
-import { historyDelete } from 'src/pages/api/history';
-import TabServiceHistory from '@/components/TabServiceHistory';
-import TabBillHistory from '@/components/TabBillHistory';
 import TabBillServiceHistory from '@/components/TabBillServiceHistory';
-// import React, { useEffect, useState } from 'react'
+import TabServiceHistory from '@/components/TabServiceHistory';
+import TabHistoryComponent from '@/components/TabHistory';
+import TabBillHistory from '@/components/TabBillHistory';
+import {useUserContext} from '@/context/UserContext';
+import {historyDelete} from 'src/pages/api/history';
+import TabPeople from '@/components/TabPeople';
 
-type Props = {}
-
-const HistoryDelete = (props: Props) => {
-  const [setFirstTab, setSetFirstTab] = useState(0);
-
-
-
-  const { cookies, setLoading } = useUserContext();
+const HistoryDelete: React.FC = () => {
+  const {cookies, setLoading} = useUserContext();
   const userData = cookies?.user;
   const router = useRouter();
   const param = router.query;
   const id = param.id;
-  const [history, setHistory] = useState([])
-  var historyReverse = [...history].reverse();
-  
-  
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    setLoading(true)
     if (id) {
-      const getHistory = async () => {
-        const { data } = await historyDelete(id, userData)
-        setHistory(data.data)
-        setLoading(false)
-
-      }
-      getHistory()
+      (async () => {
+        setLoading(true);
+        const {data} = await historyDelete(id, userData);
+        setHistory(data.data);
+        setLoading(false);
+      })();
     }
-
-  }, [id])
+  }, [id, setLoading, userData]);
 
   const data = [
     {
       label: 'Thông tin phòng trọ',
       value: 0,
-      children: <TabPeople data= {historyReverse} />,
+      children: <TabPeople data={[...history].reverse()} />,
     },
-  
     {
       label: 'Điện nước',
-      value: 2,
-      children: <TabBillServiceHistory data= {historyReverse}/>
+      value: 1,
+      children: <TabBillServiceHistory data={[...history].reverse()} />,
     },
     {
       label: 'Dịch vụ',
-      value: 4,
-      children:<TabServiceHistory data= {historyReverse}/>
-
+      value: 2,
+      children: <TabServiceHistory data={[...history].reverse()} />,
     },
     {
       label: 'Hoá đơn',
-      value: 4,
-      children: <TabBillHistory data= {historyReverse}/>
-
+      value: 3,
+      children: <TabBillHistory data={[...history].reverse()} />,
     },
   ];
   return (
@@ -81,10 +64,10 @@ const HistoryDelete = (props: Props) => {
         </div>
       </header>
       <div className="manage-room-container ">
-        <TabHistoryComponent data={data} valueInit={setFirstTab} />
+        <TabHistoryComponent data={data} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HistoryDelete
+export default HistoryDelete;

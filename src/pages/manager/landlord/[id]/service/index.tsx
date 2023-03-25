@@ -1,18 +1,18 @@
+import React, {useState, useEffect} from 'react';
+import {faPenToSquare, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {useRouter} from 'next/router';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useUserContext } from '@/context/UserContext';
-import { Toast } from 'src/hooks/toast';
-import { ListService, removeService } from 'src/pages/api/service';
-type Props = {};
 
-const ListServiceRoom = (props: Props) => {
+import {ListService, removeService} from 'src/pages/api/service';
+import {useUserContext} from '@/context/UserContext';
+import {Toast} from 'src/hooks/toast';
+
+const ListServiceRoom: React.FC = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const {id} = router.query;
   const [listServices, setListServices] = useState([]);
-  const { cookies, setLoading } = useUserContext();
+  const {cookies, setLoading} = useUserContext();
   const userData = cookies?.user;
   const [fillter, setfillter] = useState('');
   const handleSearch = (event: any) => {
@@ -22,17 +22,15 @@ const ListServiceRoom = (props: Props) => {
 
   useEffect(() => {
     if (id) {
-      const getService = async () => {
+      (async () => {
         setLoading(true);
         try {
-          const { data } = await ListService(id as string);
+          const {data} = await ListService(id as string);
           setListServices(data.data);
-          setLoading(false);
-        } catch (error) {
+        } finally {
           setLoading(false);
         }
-      };
-      getService();
+      })();
     }
   }, [id, setLoading, userData]);
 
@@ -41,14 +39,19 @@ const ListServiceRoom = (props: Props) => {
     if (confirm) {
       if (_id && id && userData) {
         setLoading(true);
-        await removeService({ idService: _id, idHouse: id, userData: userData }).then(() => {
-          Toast('success', 'Xóa dịch vụ thành công');
-          setListServices(listServices.filter((item: any) => item._id !== _id));
-          setLoading(false);
-        }).catch((error) => {
-          Toast('error', error?.response?.data?.message);
-          setLoading(false);
-        });
+        await removeService({idService: _id, idHouse: id, userData: userData})
+          .then(() => {
+            Toast('success', 'Xóa dịch vụ thành công');
+            setListServices(
+              listServices.filter((item: any) => item._id !== _id),
+            );
+          })
+          .catch(error => {
+            Toast('error', error?.response?.data?.message);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
     }
   };
@@ -96,38 +99,32 @@ const ListServiceRoom = (props: Props) => {
                       <tr>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           STT
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Tên
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Giá
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Đơn vị
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        >
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Trạng thái sử dụng
                         </th>
                         <th
                           scope="col"
-                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                        ></th>
+                          className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -136,7 +133,11 @@ const ListServiceRoom = (props: Props) => {
                           .filter((val: any) => {
                             if (fillter == '') {
                               return val;
-                            } else if (val.label.toLocaleLowerCase().includes(fillter.toLowerCase())) {
+                            } else if (
+                              val.label
+                                .toLocaleLowerCase()
+                                .includes(fillter.toLowerCase())
+                            ) {
                               return val;
                             }
                           })
@@ -147,38 +148,55 @@ const ListServiceRoom = (props: Props) => {
                                   <div className="text-center">{index + 1}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace">
-                                  <div className="text-center">{item.label}</div>
+                                  <div className="text-center">
+                                    {item.label}
+                                  </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace">
-                                  <div className="text-center">{item.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
+                                  <div className="text-center">
+                                    {item.price.toLocaleString('it-IT', {
+                                      style: 'currency',
+                                      currency: 'VND',
+                                    })}
+                                  </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace">
                                   <div className="text-center">{item.unit}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace">
-                                  <div className="text-center">{item.type ? 'Trả theo số lượng sử dụng' : 'Trả theo tháng'}</div>
+                                  <div className="text-center">
+                                    {item.type
+                                      ? 'Trả theo số lượng sử dụng'
+                                      : 'Trả theo tháng'}
+                                  </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="text-center flex">
-                                    <Link href={`/manager/landlord/${id}/service/${item._id}/edit`}>
+                                    <Link
+                                      href={`/manager/landlord/${id}/service/${item._id}/edit`}>
                                       <a className="text-amber-500 hover:text-amber-600 mx-[10px]">
                                         <FontAwesomeIcon
                                           className="w-[20px] cursor-pointer"
-                                          icon={faPenToSquare}
-                                        ></FontAwesomeIcon>
+                                          icon={
+                                            faPenToSquare
+                                          }></FontAwesomeIcon>
                                       </a>
                                     </Link>
-                                    {!item.doNotDelete && < button
-                                      className="text-red-500 hover:text-red-500 mx-[10px]"
-                                      onClick={() => remove(item._id, id, userData)}
-                                    >
-                                      <FontAwesomeIcon className="w-[20px]" icon={faTrash}></FontAwesomeIcon>
-                                    </button>}
-
+                                    {!item.doNotDelete && (
+                                      <button
+                                        className="text-red-500 hover:text-red-500 mx-[10px]"
+                                        onClick={() =>
+                                          remove(item._id, id, userData)
+                                        }>
+                                        <FontAwesomeIcon
+                                          className="w-[20px]"
+                                          icon={faTrash}></FontAwesomeIcon>
+                                      </button>
+                                    )}
                                   </div>
                                 </td>
                               </tr>
-                            )
+                            );
                           })}
                     </tbody>
                   </table>
@@ -187,8 +205,8 @@ const ListServiceRoom = (props: Props) => {
             </div>
           </div>
         </div>
-      </main >
-    </div >
+      </main>
+    </div>
   );
 };
 

@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+
 type Props = {
-  data: any
-}
-const DetailDeposit = ({ data }: Props) => {
+  data: any;
+};
+const DetailDeposit: React.FC<Props> = ({data}) => {
   return (
     <div className="max-w-full mx-auto py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col">
@@ -14,8 +15,7 @@ const DetailDeposit = ({ data }: Props) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Số tiền cọc
                     </th>
                   </tr>
@@ -23,7 +23,12 @@ const DetailDeposit = ({ data }: Props) => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   <tr>
                     <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                      <div className="text-center">{data?.payment?.deposit?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
+                      <div className="text-center">
+                        {data?.payment?.deposit?.toLocaleString('it-IT', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -33,7 +38,7 @@ const DetailDeposit = ({ data }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DetailDeposit
+export default DetailDeposit;

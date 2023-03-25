@@ -1,39 +1,15 @@
-import Image from 'next/image';
+import React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPhone, faMessage, faLocationDot, faEnvelope, faLink, faQuoteLeft } from '@fortawesome/free-solid-svg-icons';
-import { getValueCountStatis } from './api/statistical';
-type Props = {};
+import {
+  faPhone,
+  faMessage,
+  faLocationDot,
+  faEnvelope,
+  faLink,
+} from '@fortawesome/free-solid-svg-icons';
 
-type IDataCount = {
-  countRoom: Number;
-  countHouse: Number;
-  countUser: Number;
-};
-
-const Introduce = (props: Props) => {
-  const [count, setCount] = useState<IDataCount>();
-
-  useEffect(() => {
-    const getValueCount = async () => {
-      await getValueCountStatis()
-        .then((result) => {
-          setCount(result.data.data);
-        })
-        .catch(() => {
-          setCount({
-            countRoom: 0,
-            countHouse: 0,
-            countUser: 0,
-          });
-        });
-    };
-
-    getValueCount();
-  }, []);
-
+const Introduce: React.FC = () => {
   return (
     <div className="bg-slate-200 clear-both min-h-screen">
       <div className="lg:grid lg:grid-cols-3 py-10">
@@ -42,18 +18,23 @@ const Introduce = (props: Props) => {
             <div>
               <h1 className="text-xl font-bold">GIỚI THIỆU</h1>
               <p>
-                Được ra đời dựa vào nhu cầu thực tế của các cá nhân, tổ chức cho thuê nhà, phòng trọ, chung cư mini. Ứng
-                dụng quản lý phòng trọ được phát triển giúp cho người quản lý tính toán chính xác tiền phòng, dịch vụ,
-                tiết kiệm thời gian ghi chép, thống kê. <br />
-                Phần mềm quản lý được nhà trọ có nhiều nhà/ khu vực, nhiều phòng. Thiết lập linh động đơn giá dịch vụ,
-                linh động về kỳ thu tiền. <br /> Phần mềm được phát triển trên nền tảng web, sử dụng online, có thể truy
-                cập bất kỳ nơi nào có internet, không phụ thuộc thiết bị, hệ điều hành.
+                Được ra đời dựa vào nhu cầu thực tế của các cá nhân, tổ chức cho
+                thuê nhà, phòng trọ, chung cư mini. Ứng dụng quản lý phòng trọ
+                được phát triển giúp cho người quản lý tính toán chính xác tiền
+                phòng, dịch vụ, tiết kiệm thời gian ghi chép, thống kê. <br />
+                Phần mềm quản lý được nhà trọ có nhiều nhà/ khu vực, nhiều
+                phòng. Thiết lập linh động đơn giá dịch vụ, linh động về kỳ thu
+                tiền. <br /> Phần mềm được phát triển trên nền tảng web, sử dụng
+                online, có thể truy cập bất kỳ nơi nào có internet, không phụ
+                thuộc thiết bị, hệ điều hành.
               </p>
               <p className="font-bold">Các tính năng cơ bản:</p>
               <p>
                 Nhập chỉ số điện, nước, dịch vụ; tính tiền phòng <br />
-                Sử dụng được trên tất cả các thiết bị khác nhau như laptop, PC, tablet, mobile <br />
-                Sử dụng được trên các hệ điều hành khác nhau như Window, linux, iOS, Android <br />
+                Sử dụng được trên tất cả các thiết bị khác nhau như laptop, PC,
+                tablet, mobile <br />
+                Sử dụng được trên các hệ điều hành khác nhau như Window, linux,
+                iOS, Android <br />
               </p>
             </div>
           </div>
@@ -62,20 +43,31 @@ const Introduce = (props: Props) => {
 
             <p className="pt-5">- Quản lý phòng, khu vực</p>
             <p className="pt-3">
-              - Quản lý dịch vụ, đơn giá, số lượng sử dụng (ví dụ điện, nước, internet, vệ sinh, tiền gửi xe.. linh động
-              bổ sung tùy từng khách hàng)
+              - Quản lý dịch vụ, đơn giá, số lượng sử dụng (ví dụ điện, nước,
+              internet, vệ sinh, tiền gửi xe.. linh động bổ sung tùy từng khách
+              hàng)
             </p>
             <p className="pt-3">
-              - Thêm khách, sửa thông tin khách, trả phòng, quản lý thông tin hợp đồng, xuất, in hợp đồng, tùy chỉnh mẫu
-              hợp đồng theo từng nhu cầu khác nhau; quản lý thành viên trong phòng
+              - Thêm khách, sửa thông tin khách, trả phòng, quản lý thông tin
+              hợp đồng, xuất, in hợp đồng, tùy chỉnh mẫu hợp đồng theo từng nhu
+              cầu khác nhau; quản lý thành viên trong phòng
             </p>
-            <p className="pt-3">- Nhập chỉ số điện/ nước mới theo từng phòng, tháng</p>
-            <p className="pt-3">- Nhập các phát sinh tăng giảm khác (các ngoại lệ)</p>
-            <p className="pt-3">- Tính tiền thuê phòng, tiền dịch vụ, theo từng khu vực, phòng, theo kỳ</p>
-            <p className="pt-3">- Quản lý các khoản phí liên quan đến nhà trọ</p>
             <p className="pt-3">
-              - Báo cáo doanh thu tổng; Danh sách khách thuê; Báo cáo lời lỗ; Hợp đồng sắp hết hạn; Danh sách khách thuê
-              đặt cọc
+              - Nhập chỉ số điện/ nước mới theo từng phòng, tháng
+            </p>
+            <p className="pt-3">
+              - Nhập các phát sinh tăng giảm khác (các ngoại lệ)
+            </p>
+            <p className="pt-3">
+              - Tính tiền thuê phòng, tiền dịch vụ, theo từng khu vực, phòng,
+              theo kỳ
+            </p>
+            <p className="pt-3">
+              - Quản lý các khoản phí liên quan đến nhà trọ
+            </p>
+            <p className="pt-3">
+              - Báo cáo doanh thu tổng; Danh sách khách thuê; Báo cáo lời lỗ;
+              Hợp đồng sắp hết hạn; Danh sách khách thuê đặt cọc
             </p>
           </div>
         </div>
@@ -106,30 +98,42 @@ const Introduce = (props: Props) => {
               <h2 className="text-2xl font-bold">LIÊN HỆ</h2>
               <div className="text-gray-500">
                 <div className="flex pt-5">
-                  <FontAwesomeIcon className="w-5" icon={faPhone}></FontAwesomeIcon>
+                  <FontAwesomeIcon
+                    className="w-5"
+                    icon={faPhone}></FontAwesomeIcon>
 
-                  <a href={`tel:0868622599`} className="pl-3">
+                  <a href="tel:0868622599" className="pl-3">
                     0868622599
                   </a>
                 </div>
                 <div className="flex pt-5">
-                  <FontAwesomeIcon className="w-5" icon={faMessage}></FontAwesomeIcon>
-                  <a href={`tel:0868622599`} className="pl-3">
+                  <FontAwesomeIcon
+                    className="w-5"
+                    icon={faMessage}></FontAwesomeIcon>
+                  <a href="tel:0868622599" className="pl-3">
                     0868622599
                   </a>
                 </div>
                 <div className="flex pt-5">
-                  <FontAwesomeIcon className="w-5" icon={faLocationDot}></FontAwesomeIcon>
-                  <span className="pl-3">Số 18 Tam Trinh, Hai Bà Trưng, Hà Nội</span>
+                  <FontAwesomeIcon
+                    className="w-5"
+                    icon={faLocationDot}></FontAwesomeIcon>
+                  <span className="pl-3">
+                    Số 18 Tam Trinh, Hai Bà Trưng, Hà Nội
+                  </span>
                 </div>
                 <div className="flex pt-5">
-                  <FontAwesomeIcon className="w-5" icon={faEnvelope}></FontAwesomeIcon>
+                  <FontAwesomeIcon
+                    className="w-5"
+                    icon={faEnvelope}></FontAwesomeIcon>
                   <a href="mailto:linhna.2049@gmail.com" className="pl-3">
                     linhna.2049@gmail.com
                   </a>
                 </div>
                 <div className="flex pt-5">
-                  <FontAwesomeIcon className="w-5" icon={faLink}></FontAwesomeIcon>
+                  <FontAwesomeIcon
+                    className="w-5"
+                    icon={faLink}></FontAwesomeIcon>
                   <Link href="/">
                     {/* TODO: Change URL  */}
                     <a href="url" className="pl-3 text-green-500">

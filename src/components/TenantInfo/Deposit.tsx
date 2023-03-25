@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+
 export type IContractData = {
   addressCT: string;
   timeCT: string;
@@ -17,14 +18,14 @@ type Info = {
   dateRange: String;
   phoneNumber: String;
   issuedBy: String;
-  deposit: number
+  deposit: number;
 };
 
 type Props = {
   dataContract: IContractData;
-  handleResetPage: () => void
+  handleResetPage: () => void;
 };
-const Deposit = ({ dataContract }: Props) => {
+const Deposit: React.FC<Props> = ({dataContract}) => {
   return (
     <div className="max-w-full mx-auto py-6 sm:px-6 lg:px-8">
       <div className="flex flex-col">
@@ -36,8 +37,7 @@ const Deposit = ({ dataContract }: Props) => {
                   <tr>
                     <th
                       scope="col"
-                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
+                      className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Số tiền cọc
                     </th>
                   </tr>
@@ -45,7 +45,12 @@ const Deposit = ({ dataContract }: Props) => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   <tr>
                     <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                      <div className="text-center">{dataContract?.infoTenant?.deposit.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
+                      <div className="text-center">
+                        {dataContract?.infoTenant?.deposit.toLocaleString(
+                          'it-IT',
+                          {style: 'currency', currency: 'VND'},
+                        )}
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -55,7 +60,7 @@ const Deposit = ({ dataContract }: Props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Deposit
+export default Deposit;

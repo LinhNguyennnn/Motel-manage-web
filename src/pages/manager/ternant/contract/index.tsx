@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Image } from 'antd';
-import 'antd/dist/antd.css';
-import { useUserContext } from '@/context/UserContext';
-import { readRoomData } from 'src/pages/api/room';
+import React, {useState, useEffect} from 'react';
+import {Image} from 'antd';
 
-type Props = {};
+import {useUserContext} from '@/context/UserContext';
+import {readRoomData} from 'src/pages/api/room';
 
-const ContractTernant = (props: Props) => {
-  const [codeRoom, setCodeRoom] = useState<any>();
-  const { cookies } = useUserContext();
+const ContractTernant: React.FC = () => {
   const [roomData, setRoomData] = useState<any>();
-  useEffect(() => {
-    const data = cookies?.code_room;
-    setCodeRoom(data as any);
-  }, [cookies?.code_room]);
+
+  const {cookies, setLoading} = useUserContext();
 
   useEffect(() => {
-    if (codeRoom?._id) {
-      const getRoomData = async () => {
-        const { data } = await readRoomData(codeRoom?._id)
-        setRoomData(data?.data)
-      };
-      getRoomData();
+    if (cookies?.code_room?._id) {
+      (async () => {
+        setLoading(true);
+        const {data} = await readRoomData(cookies.code_room._id);
+        setRoomData(data.data);
+        setLoading(false);
+      })();
     }
-  }, [codeRoom?._id])
-  const arrImage = roomData?.contract?.imageContract
+  }, [cookies?.code_room?._id, setLoading]);
 
   return (
     <div>
@@ -39,20 +33,18 @@ const ContractTernant = (props: Props) => {
           </div>
         </div>
       </header>
-      <main className='text-center mt-10'>
-        {arrImage?.length ? (
-          <div className='flex gap-4 flex-wrap justify-center'>
-            {arrImage?.map((item: any, index: number) => {
-              return (
-                <div key={index} className="">
-                  <Image style={{ width: '400px' }} src={item} alt='' />
-                </div>
-              )
-            })}
+      <main className="text-center mt-10">
+        {roomData?.contract?.imageContract?.length ? (
+          <div className="flex gap-4 flex-wrap justify-center">
+            {roomData?.contract?.imageContract.map(
+              (item: any, index: number) => (
+                <Image key={index} style={{width: 400}} src={item} alt="" />
+              ),
+            )}
           </div>
         ) : (
           <div>
-            <h2 className='uppercase text-2xl'>Không có ảnh hợp đồng</h2>
+            <h2 className="uppercase text-2xl">Không có ảnh hợp đồng</h2>
           </div>
         )}
       </main>

@@ -1,27 +1,25 @@
-import { useUserContext } from '@/context/UserContext';
-import React, { useEffect, useState } from 'react';
-import { readRoomData } from 'src/pages/api/room';
+import React, {useEffect, useState} from 'react';
 
-type Props = {};
+import {useUserContext} from '@/context/UserContext';
+import {readRoomData} from 'src/pages/api/room';
 
-const InfoRoom = (props: Props) => {
-  const [codeRoom, setCodeRoom] = useState<any>();
-  const { cookies } = useUserContext();
+const InfoRoom: React.FC = () => {
+  const [searchValue, setSearchValue] = useState<string>();
   const [roomData, setRoomData] = useState<any>();
-  useEffect(() => {
-    const data = cookies?.code_room;
-    setCodeRoom(data as any);
-  }, [cookies?.code_room]);
+
+  const {cookies, setLoading} = useUserContext();
 
   useEffect(() => {
-    if (codeRoom?._id) {
-      const getRoomData = async () => {
-        const { data } = await readRoomData(codeRoom?._id)
-        setRoomData(data?.data)
-      };
-      getRoomData();
+    if (cookies?.code_room?._id) {
+      (async () => {
+        setLoading(true);
+        const {data} = await readRoomData(cookies.code_room._id);
+        setRoomData(data?.data);
+        setLoading(false);
+      })();
     }
-  }, [codeRoom?._id])
+  }, [cookies?.code_room?._id, setLoading]);
+
   return (
     <div className="h-auto">
       <div className="bg-white shadow">
@@ -45,33 +43,28 @@ const InfoRoom = (props: Props) => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tên phòng
                       </th>
 
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Giá thuê phòng
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Diện tích phòng
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Số người ở tối đa
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Số người ở hiện tại
                       </th>
                     </tr>
@@ -79,19 +72,30 @@ const InfoRoom = (props: Props) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     <tr>
                       <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                        <div className="text-center font-bold">{roomData?.name}</div>
+                        <div className="text-center font-bold">
+                          {roomData?.name}
+                        </div>
                       </td>
                       <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                        <div className="text-center">{roomData?.price?.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</div>
+                        <div className="text-center">
+                          {roomData?.price?.toLocaleString('it-IT', {
+                            style: 'currency',
+                            currency: 'VND',
+                          })}
+                        </div>
                       </td>
                       <td className="px-9 py-4 whitespace text-sm text-gray-500">
                         <div className="text-center">{roomData?.area} m2</div>
                       </td>
                       <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                        <div className="text-center font-bold">{roomData?.maxMember}</div>
+                        <div className="text-center font-bold">
+                          {roomData?.maxMember}
+                        </div>
                       </td>
                       <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                        <div className="text-center font-bold">{roomData?.listMember?.length}</div>
+                        <div className="text-center font-bold">
+                          {roomData?.listMember?.length}
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -117,6 +121,7 @@ const InfoRoom = (props: Props) => {
                     name="keyword"
                     className="text-black shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Tìm kiếm..."
+                    onChange={e => setSearchValue(e.target.value)}
                   />
                 </form>
               </div>
@@ -134,47 +139,57 @@ const InfoRoom = (props: Props) => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tên thành viên
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         CMND/CCCD
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Số điện thoại
                       </th>
                       <th
                         scope="col"
-                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
+                        className="px-9 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Chức vụ trong phòng
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {roomData?.listMember?.map((item: any, index: number) => (
-                      <tr key={index}>
-                        <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                          <div className="text-center font-bold">{item.memberName}</div>
-                        </td>
-                        <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                          <div className="text-center">{item.cardNumber}</div>
-                        </td>
-                        <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                          <div className="text-center">{item.phoneNumber}</div>
-                        </td>
-                        <td className="px-9 py-4 whitespace text-sm text-gray-500">
-                          <div className="text-center">{item.status ? 'Chủ phòng' : 'thành viên'}</div>
-                        </td>
-                      </tr>
-                    ))}
+                    {roomData?.listMember
+                      ?.filter(
+                        (member: any) =>
+                          !searchValue ||
+                          member.memberName
+                            .toLocaleUpperCase()
+                            .includes(searchValue.toLocaleUpperCase()),
+                      )
+                      .map((item: any, index: number) => (
+                        <tr key={index}>
+                          <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                            <div className="text-center font-bold">
+                              {item.memberName}
+                            </div>
+                          </td>
+                          <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                            <div className="text-center">{item.cardNumber}</div>
+                          </td>
+                          <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                            <div className="text-center">
+                              {item.phoneNumber}
+                            </div>
+                          </td>
+                          <td className="px-9 py-4 whitespace text-sm text-gray-500">
+                            <div className="text-center">
+                              {item.status ? 'Chủ phòng' : 'thành viên'}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useState } from 'react';
-import { createContext } from 'react';
-import { Toast } from 'src/hooks/toast';
+import React, {useContext, createContext, useState} from 'react';
 import useCookies from 'react-cookie/cjs/useCookies';
+import {useRouter} from 'next/router';
+
+import {Toast} from 'src/hooks/toast';
 
 export interface UserState {
   loading: boolean;
@@ -26,9 +26,14 @@ export interface UserState {
 
 const UserContext = createContext<UserState | null>(null);
 
-export const useUserContext = (): UserState => useContext(UserContext) as UserState;
+type Props = {
+  children: React.ReactNode;
+};
 
-export const UserProvider = ({ children }: any) => {
+export const useUserContext = (): UserState =>
+  useContext(UserContext) as UserState;
+
+export const UserProvider: React.FC<Props> = ({children}) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -43,12 +48,12 @@ export const UserProvider = ({ children }: any) => {
 
   const logoutResetData = () => {
     setLoading(true);
-    removeCookie('user', { path: '/', maxAge: 30 * 24 * 60 * 60 });
-    removeCookie('code_room', { path: '/', maxAge: 7 * 24 * 60 * 60 });
+    removeCookie('user', {path: '/', maxAge: 30 * 24 * 60 * 60});
+    removeCookie('code_room', {path: '/', maxAge: 7 * 24 * 60 * 60});
     setTimeout(() => {
       setLoading(false);
     }, 1000);
-    router.push(`/`);
+    router.push('/');
     Toast('success', 'Đăng xuất thành công!');
   };
 
