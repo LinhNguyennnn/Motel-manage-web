@@ -196,7 +196,7 @@ const ListMember: React.FC<IMember> = props => {
             <div className="mt-6">
               <h2 className="pt-2 text-xl">Cập nhật thành viên </h2>
             </div>{' '}
-            <div className="border  p-2 ">
+            <div className="p-2">
               <form
                 className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
                 onSubmit={handleSubmit(onSubmit)}>
@@ -320,7 +320,7 @@ const ListMember: React.FC<IMember> = props => {
                   )}
                 </div>
 
-                <div className="flex items-center">
+                <div className="flex items-center justify-items-end w-full">
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit">
