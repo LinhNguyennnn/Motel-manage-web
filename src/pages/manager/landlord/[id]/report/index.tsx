@@ -46,7 +46,7 @@ const Resport: React.FC = () => {
 
   const [noProcess, processed] = useMemo(
     () =>
-      report?.reduce(
+      (report ?? []).reduce(
         (prevState: any, nextState: any) => {
           if (nextState?.status) {
             prevState[0].push(nextState);

@@ -48,7 +48,7 @@ const TabPanelComponent: React.FC<ITabPanel> = ({data}) => {
   };
   return (
     <Box sx={{width: '100%'}}>
-      <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+      <Box sx={{ borderColor: 'divider'}}>
         <Tabs
           className="overflow-auto bg-white shadow border rounded-md mt-5"
           value={value}
