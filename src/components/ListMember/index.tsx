@@ -193,7 +193,7 @@ const ListMember: React.FC<IMember> = props => {
         </div>
         <Modal open={open} onClose={onCloseModal} center>
           <div className="w-full">
-            <div className="  ">
+            <div className="mt-6">
               <h2 className="pt-2 text-xl">Cập nhật thành viên </h2>
             </div>{' '}
             <div className="border  p-2 ">
