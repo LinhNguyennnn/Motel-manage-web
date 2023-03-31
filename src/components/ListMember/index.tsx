@@ -211,7 +211,7 @@ const ListMember: React.FC<IMember> = props => {
                     id="name"
                     type="text"
                     placeholder="Xin mời nhập tên thành viên"
-                    {...register('memberName', {required: true, minLength: 6})}
+                    {...register('memberName', {required: true, minLength: 2})}
                   />
                   {errors.memberName?.type === 'required' && (
                     <span className="text-[red] mt-1 block">
@@ -220,7 +220,7 @@ const ListMember: React.FC<IMember> = props => {
                   )}
                   {errors.memberName?.type === 'minLength' && (
                     <span className="text-[red] mt-1 block">
-                      Tên thành viên phải tối thiểu 6 ký tự!
+                      Tên thành viên phải tối thiểu 2 ký tự!
                     </span>
                   )}
                 </div>

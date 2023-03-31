@@ -5,6 +5,7 @@ import {useRouter} from 'next/router';
 
 import {readHouse, updateHouse} from 'src/pages/api/house';
 import {Toast} from 'src/hooks/toast';
+import Link from 'next/link';
 
 const EditHouse: React.FC = () => {
   const router = useRouter();
@@ -66,7 +67,7 @@ const EditHouse: React.FC = () => {
             id="name"
             type="text"
             placeholder="Xin mời nhập tên nhà"
-            {...register('name', {required: true, minLength: 6})}
+            {...register('name', {required: true, minLength: 3})}
           />
           {errors.name?.type === 'required' && (
             <span className="text-[red] mt-1 block">
@@ -75,7 +76,7 @@ const EditHouse: React.FC = () => {
           )}
           {errors.name?.type === 'minLength' && (
             <span className="text-[red] mt-1 block">
-              Tên nhà tối thiểu 6 ký tự!
+              Tên nhà tối thiểu 3 ký tự!
             </span>
           )}
         </div>
@@ -104,10 +105,23 @@ const EditHouse: React.FC = () => {
           )}
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex gap-2">
+          <Link
+            href="/manager/landlord/list-home"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <a className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Huỷ
+            </a>
+          </Link>
+
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit">
+            type="submit"
+            disabled={Object.keys(errors).length > 0}
+            className={`inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 ${
+              Object.keys(errors).length > 0
+                ? 'opacity-50 cursor-not-allowed pointer-events-none'
+                : 'hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+            }`}>
             Sửa nhà
           </button>
         </div>

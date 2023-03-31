@@ -58,7 +58,7 @@ const AddHome: React.FC = () => {
             id="name"
             type="text"
             placeholder="Xin mời nhập tên nhà"
-            {...register('name', {required: true, minLength: 6})}
+            {...register('name', {required: true, minLength: 3})}
           />
           {errors.name?.type === 'required' && (
             <span className="text-[red] mt-1 block">
@@ -67,7 +67,7 @@ const AddHome: React.FC = () => {
           )}
           {errors.name?.type === 'minLength' && (
             <span className="text-[red] mt-1 block">
-              Tên nhà tối thiểu 6 ký tự!
+              Tên nhà tối thiểu 3 ký tự!
             </span>
           )}
         </div>
