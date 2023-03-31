@@ -7,7 +7,7 @@ import Link from 'next/link';
 import {MENU_TENANTS} from 'src/util/MENUTENANT';
 
 const SideBarTenants: React.FC = () => {
-  const [collapseShow, setCollapseShow] = useState<Boolean>(false);
+  const [collapseShow, setCollapseShow] = useState('hidden');
   const [actives, setActives] = useState<number>();
 
   const router = useRouter();
@@ -16,18 +16,22 @@ const SideBarTenants: React.FC = () => {
     <>
       <div
         className={
-          !collapseShow
+          collapseShow === 'hidden'
             ? 'overlay hidden'
             : 'fixed w-full h-full opacity-70 bg-black z-10'
         }
-        onClick={() => setCollapseShow(false)}></div>
+        onClick={() => setCollapseShow('hidden')}></div>
       <nav className="sm:fixed sm:w-full xs:fixed xs:w-full 2xs:fixed 2xs:w-full s:fixed s:w-full md:left-0 md:block  md:top-0 md:bottom-0  md:flex-row md:flex-nowrap md:overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between relative md:w-64 z-10 py-4 px-6">
         <div className="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto">
           {/* Toggler */}
           <button
             className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
             type="button"
-            onClick={() => setCollapseShow(true)}>
+            onClick={() =>
+              setCollapseShow(
+                'bg-white w-[50%] 2xs:w-[80%] xs:w-[60%] s:w-[40%] py-3 px-6 md:px-0 md:py-0 h-screen md:w-full',
+              )
+            }>
             <FontAwesomeIcon className="w-[16px] text-black" icon={faBars} />
           </button>
           {/* Brand */}
@@ -65,7 +69,7 @@ const SideBarTenants: React.FC = () => {
                   <button
                     type="button"
                     className="ml-4 cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
-                    onClick={() => setCollapseShow(false)}>
+                    onClick={() => setCollapseShow('hidden')}>
                     <FontAwesomeIcon
                       className="w-[16px] text-black"
                       icon={faXmark}
@@ -79,7 +83,10 @@ const SideBarTenants: React.FC = () => {
               {MENU_TENANTS.map((menu, index) => (
                 <li
                   key={index}
-                  onClick={() => setActives(menu.checkMenu)}
+                  onClick={() => {
+                    setActives(menu.checkMenu);
+                    setCollapseShow('hidden');
+                  }}
                   className={
                     'items-center rounded-lg mb-4 fw-500 cursor-pointer hover:bg-blue-500 round-md' +
                     ((menu.url &&
