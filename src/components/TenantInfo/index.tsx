@@ -86,7 +86,7 @@ const TenantInformation: React.FC<Props> = ({data, resetDataLiquid}) => {
                     className="mt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="name"
                     type="text"
-                    {...register('name', {required: true, minLength: 6})}
+                    {...register('name', {required: true, minLength: 3})}
                   />
                   {errors.name?.type === 'required' && (
                     <span className="text-[red] mt-1 block">
@@ -95,7 +95,7 @@ const TenantInformation: React.FC<Props> = ({data, resetDataLiquid}) => {
                   )}
                   {errors.name?.type === 'minLength' && (
                     <span className="text-[red] mt-1 block">
-                      Tên phòng phải tối thiểu 6 ký tự!
+                      Tên phòng phải tối thiểu 3 ký tự!
                     </span>
                   )}
                 </div>

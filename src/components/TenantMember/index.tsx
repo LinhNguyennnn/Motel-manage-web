@@ -122,7 +122,7 @@ const TenantMember: React.FC<Props> = ({data, data1, handleResetPage}) => {
                   id="name"
                   type="text"
                   placeholder="Xin mời nhập tên thành viên"
-                  {...register('memberName', {required: true, minLength: 6})}
+                  {...register('memberName', {required: true, minLength: 2})}
                 />
                 {errors.memberName?.type === 'required' && (
                   <span className="text-[red] mt-1 block">
@@ -131,7 +131,7 @@ const TenantMember: React.FC<Props> = ({data, data1, handleResetPage}) => {
                 )}
                 {errors.memberName?.type === 'minLength' && (
                   <span className="text-[red] mt-1 block">
-                    Tên thành viên tối thiểu 6 ký tự!
+                    Tên thành viên tối thiểu 2 ký tự!
                   </span>
                 )}
               </div>
