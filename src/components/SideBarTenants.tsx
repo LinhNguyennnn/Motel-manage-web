@@ -1,14 +1,17 @@
 import React, {useState} from 'react';
-import {faBars, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faXmark, faRightFromBracket} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
+import {useUserContext} from '@/context/UserContext';
 
 import {MENU_TENANTS} from 'src/util/MENUTENANT';
 
 const SideBarTenants: React.FC = () => {
   const [collapseShow, setCollapseShow] = useState('hidden');
   const [actives, setActives] = useState<number>();
+
+  const {logoutResetData} = useUserContext();
 
   const router = useRouter();
 
@@ -107,6 +110,18 @@ const SideBarTenants: React.FC = () => {
                   </Link>
                 </li>
               ))}
+              <li
+                onClick={logoutResetData}
+                className={
+                  'items-center rounded-lg mb-4 fw-500 cursor-pointer hover:bg-blue-500 round-mdbg-gray-300 text-lightBlue-500 hover:text-lightBlue-600'
+                }>
+                  <span className={
+                      'h-[45px] text-xs font-bold flex items-center gap-4 text-black px-4 py-3 bg-gradient-to-tr from-light-blue-500 to-light-blue-700 rounded-lg focus:bg-blue-500 hover:text-white shadow-md'
+                    }>
+                    <FontAwesomeIcon className="w-[16px] text-black" icon={faRightFromBracket} />
+                    Đăng xuất
+                  </span>
+              </li>
             </ul>
           </div>
         </div>
